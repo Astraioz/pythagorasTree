@@ -1,13 +1,13 @@
-function $(id)
-{
+function $(id) {
     return document.getElementById(id);
 }
 
 canvas = document.getElementById("canvas");
 ctx = canvas.getContext("2d");
-canvas.width  = window.innerWidth;
+canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 ctx.lineWidth = 5;
+ctx.strokeStyle = "#FFFFFF";
 
 
 random = false;
@@ -18,8 +18,8 @@ function start() {
     base = parseInt($("baseSize").value);
     a = parseInt($("angle1").value) * Math.PI / 180;
     b = parseInt($("angle2").value) * Math.PI / 180;
-    pointA = new Point(canvas.width/2 - base/2, canvas.height/4*3);
-    pointB = new Point(canvas.width/2 + base/2, canvas.height/4*3);
+    pointA = new Point(canvas.width / 2 - base / 2, canvas.height / 4 * 3);
+    pointB = new Point(canvas.width / 2 + base / 2, canvas.height / 4 * 3);
     //console.log("A: " + pointA.x + " : " + pointA.y + " B: " + pointB.x + " : " + pointB.y);
     triangle(pointA, pointB, depth);
 }
@@ -35,7 +35,8 @@ function triangle(pA, pB, depth) {
     if (depth > 0) {
         unitAC = unitVector(pA, pC);
         normUnitAC = normVector(unitAC);
-        d = Math.sqrt(Math.pow(pA.x - pC.x,2) + Math.pow(pA.y - pC.y,2)) * (random ? Math.random() : 1);
+        d = Math.sqrt(Math.pow(pA.x - pC.x, 2) + Math.pow(pA.y - pC.y, 2)) * (
+            random ? Math.random() : 1);
         pANew = new Point(pA.x, pA.y);
         pANew.x -= d * normUnitAC.x;
         pANew.y -= d * normUnitAC.y;
@@ -45,11 +46,12 @@ function triangle(pA, pB, depth) {
         pCNew.y -= d * normUnitAC.y;
         drawLine(pA, pANew);
         drawLine(pC, pCNew);
-        triangle(pANew, pCNew, depth-1);
+        triangle(pANew, pCNew, depth - 1);
 
         unitCB = unitVector(pC, pB);
         normUnitCB = normVector(unitCB);
-        d = Math.sqrt(Math.pow(pC.x - pB.x,2) + Math.pow(pC.y - pB.y,2)) * (random ? Math.random() : 1);
+        d = Math.sqrt(Math.pow(pC.x - pB.x, 2) + Math.pow(pC.y - pB.y, 2)) * (
+            random ? Math.random() : 1);
         pCNew = new Point(pC.x, pC.y);
         pCNew.x -= d * normUnitCB.x;
         pCNew.y -= d * normUnitCB.y;
@@ -59,7 +61,7 @@ function triangle(pA, pB, depth) {
         pBNew.y -= d * normUnitCB.y;
         drawLine(pC, pCNew);
         drawLine(pB, pBNew);
-        triangle(pCNew, pBNew, depth-1);
+        triangle(pCNew, pBNew, depth - 1);
     }
 };
 
@@ -69,7 +71,6 @@ function getRandom(from, to) {
 
 
 function drawLine(pA, pB) {
-    ctx.strokeStyle = "#FFFFFF";
     ctx.beginPath();
     ctx.moveTo(pA.x, pA.y);
     ctx.lineTo(pB.x, pB.y);
@@ -83,15 +84,14 @@ function drawTriangle(pA, pB, pC) {
     ctx.lineTo(pB.x, pB.y);
     ctx.lineTo(pC.x, pC.y);
     ctx.closePath();
-
     ctx.stroke();
 };
 
 
 function calcTriangle(pA, pB) {
-    base = Math.sqrt(Math.pow(pA.x - pB.x,2) + Math.pow(pA.y - pB.y,2));
-    var d = base * Math.tan(b) / (Math.tan(a)+Math.tan(b));
-    var h = Math.tan(a) * Math.tan(b) * base / (Math.tan(a)+Math.tan(b));
+    base = Math.sqrt(Math.pow(pA.x - pB.x, 2) + Math.pow(pA.y - pB.y, 2));
+    var d = base * Math.tan(b) / (Math.tan(a) + Math.tan(b));
+    var h = Math.tan(a) * Math.tan(b) * base / (Math.tan(a) + Math.tan(b));
     var unitAB = unitVector(pA, pB);
     var normUnitAB = normVector(unitAB);
     var dirX = (d * unitAB.x - h * normUnitAB.x);
@@ -117,13 +117,8 @@ function unitVector(pA, pB) {
     return new Point(xAB / valueAB, yAB / valueAB);
 };
 
-$('viewPNG').onclick = function(event)
-{
-    window.location = canvas.toDataURL('image/png');
-};
-
 refresh = function(event) {
-    ctx.clearRect(0,0,canvas.width,canvas.height);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
     start();
 }
 
@@ -132,6 +127,5 @@ $("angle1").oninput = refresh;
 $("angle2").oninput = refresh;
 $("baseSize").oninput = refresh;
 $("iterations").oninput = refresh;
-$('startButton').onclick = refresh;
 
 start();
